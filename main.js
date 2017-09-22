@@ -1,4 +1,3 @@
-const { app } = require('electron');
 const request = require('request');
 const { exec } = require('child_process');
 
@@ -58,11 +57,9 @@ const watchSoptify = () => {
   }, 3000);
 };
 
-app.on('ready', () => {
-  if (!token) {
-    console.log('token ga naiyo');
-    return;
-  }
+if (!token) {
+  console.log('token ga naiyo');
+  process.exit();
+}
 
-  watchSoptify();
-});
+watchSoptify();
