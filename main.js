@@ -1,6 +1,6 @@
 const { app } = require('electron');
 const request = require('request');
-const { execSync } = require('child_process');
+const { exec } = require('child_process');
 
 const token = process.env.SLACK_API_TOKEN;
 const spotifyScript = './bin/get-playing-on-spotify';
@@ -29,25 +29,32 @@ const watchSoptify = () => {
   let before;
 
   setInterval(() => {
-    const res = execSync(spotifyScript);
-    if (!res) {
-      return;
-    }
-    const m = JSON.parse(res);
-    if ('error' in m) {
-      console.error(m.error);
-      return;
-    }
+    exec(spotifyScript, (e, stdout, stderr) => {
+      if (e) {
+        console.error(e);
+        return;
+      }
+      if (stderr) {
+        console.error(stderr);
+        return;
+      }
 
-    if (before === JSON.stringify(m)) {
-      // console.log('not change');
-      return;
-    }
-    before = JSON.stringify(m);
-    const message = `${m.track} - ${m.artist}`;
-    const emoji = (m.state === 'playing') ? ':spotify:' : ':musical_note:';
-    sendToSlack({ message, emoji });
-    console.log(m);
+      const m = JSON.parse(stdout);
+      if ('error' in m) {
+        console.error(m.error);
+        return;
+      }
+
+      if (before === JSON.stringify(m)) {
+        // console.log('not change');
+        return;
+      }
+      before = JSON.stringify(m);
+      const message = `${m.track} - ${m.artist}`;
+      const emoji = (m.state === 'playing') ? ':spotify:' : ':musical_note:';
+      sendToSlack({ message, emoji });
+      console.log(m);
+    });
   }, 3000);
 };
 
