@@ -1,0 +1,12 @@
+#!/usr/bin/osascript
+
+if application "Spotify" is running
+  tell application "Spotify"
+    set currentState to player state as string
+    set currentArtist to artist of current track as string
+    set currentTrack to name of current track as string
+    return "{\"state\":\"" & currentState & "\", \"track\":\"" & currentTrack & "\", \"artist\":\"" & currentArtist & "\"}"
+  end tell
+else
+  return "{\"error\":\"Spotify is not running.\"}"
+end if

@@ -1,12 +1,11 @@
-const electron = require('electron');
+const { app } = require('electron');
 const request = require('request');
-const playback = require('playback');
-
-const app = electron.app;
+const { execSync } = require('child_process');
 
 const token = process.env.SLACK_API_TOKEN;
+const spotifyScript = './bin/get-playing-on-spotify';
 
-const sendToSlack = (message) => {
+const sendToSlack = ({ emoji, message }) => {
   request({
     url: 'https://slack.com/api/users.profile.set',
     method: 'POST',
@@ -14,7 +13,7 @@ const sendToSlack = (message) => {
       token,
       profile: JSON.stringify({
         status_text: message,
-        status_emoji: ':musical_note:',
+        status_emoji: emoji,
       }),
     },
   }, (error, response, body) => {
@@ -26,25 +25,29 @@ const sendToSlack = (message) => {
   });
 };
 
-const watchiTunes = () => {
-  let nowplaying;
+const watchSoptify = () => {
+  let before;
 
   setInterval(() => {
-    playback.currentTrack((res) => {
-      if (!res) {
-        return;
-      }
+    const res = execSync(spotifyScript);
+    if (!res) {
+      return;
+    }
+    const m = JSON.parse(res);
+    if ('error' in m) {
+      console.error(m.error);
+      return;
+    }
 
-      const message = `${res.name} - ${res.artist}`;
-      if (nowplaying === message) {
-        return;
-      }
-
-      console.log(message);
-      sendToSlack(message);
-
-      nowplaying = message;
-    });
+    if (before === JSON.stringify(m)) {
+      // console.log('not change');
+      return;
+    }
+    before = JSON.stringify(m);
+    const message = `${m.track} - ${m.artist}`;
+    const emoji = (m.state === 'playing') ? ':spotify:' : ':musical_note:';
+    sendToSlack({ message, emoji });
+    console.log(m);
   }, 3000);
 };
 
@@ -54,5 +57,5 @@ app.on('ready', () => {
     return;
   }
 
-  watchiTunes();
+  watchSoptify();
 });
