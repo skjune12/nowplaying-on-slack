@@ -6,7 +6,7 @@
   "scripts": {
     "start": "forever start main.js",
     "stop": "forever stop main.js",
-    "list": "forever list"
+    "restart": "forever restart main.js"
   },
   "keywords": [],
   "author": "iwata <121048+iwata@users.noreply.github.com>",

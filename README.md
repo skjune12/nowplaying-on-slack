@@ -9,6 +9,13 @@ $ yarn install
 $ SLACK_API_TOKEN=xoxp-xxxx-xxxx-xxxx-xxxx npm start
 ```
 
+## Status and stop
+
+```
+$ npx forever list
+$ npm stop
+```
+
 ## Ref.
 
 - [Spotifyで再生中の曲をtmuxのステータスバーに表示する](https://qiita.com/j-un/items/cf544b3e131772f5f197)
