@@ -24,7 +24,7 @@ const sendToSlack = ({ emoji, message }) => {
   });
 };
 
-const watchSoptify = () => {
+const watchSpotify = () => {
   let before;
 
   setInterval(() => {
@@ -62,4 +62,4 @@ if (!token) {
   process.exit();
 }
 
-watchSoptify();
+watchSpotify();
