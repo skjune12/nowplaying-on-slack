@@ -3,7 +3,6 @@ const yaml = require('js-yaml');
 const fs = require('fs');
 const { exec } = require('child_process');
 
-// const token = process.env.SLACK_API_TOKEN;
 const tokens = yaml.safeLoad(fs.readFileSync('./tokens.yaml', 'utf8'));
 const spotifyScript = './bin/get-playing-on-spotify';
 

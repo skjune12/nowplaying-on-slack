@@ -6,7 +6,20 @@ Spotifyで現在聞いている楽曲をSlackのStatusに表示させるアプ�
 
 ```
 $ yarn install
-$ SLACK_API_TOKEN=xoxp-xxxx-xxxx-xxxx-xxxx npm start
+# create tokens.yaml
+$ touch tokens.yaml
+$ vim tokens.yaml
+$ npm start
+```
+
+## tokens.yaml
+
+下記のように `tokens.yaml` にAPIを列挙することで複数のチームに対してステータスを変更することができます。
+- tokenは[ここから入手可能](https://api.slack.com/custom-integrations/legacy-tokens)。
+
+```
+- xoxp-xxxx-xxxx-xxxx-xxxx # hoge.slack.com
+- xoxp-yyyy-yyyy-yyyy-yyyy # fuga.slack.com
 ```
 
 ## Status and stop
